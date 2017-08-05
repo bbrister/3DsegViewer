@@ -46,6 +46,7 @@ window.onload = function() {
   volume.file = 'volume.nii';
   // we also attach a label map to show segmentations on a slice-by-slice base
   //volume.labelmap.file = 'http://x.babymri.org/?seg.nrrd';
+  volume.labelmap.file = 'labels.nii';
   // .. and use a color table to map the label map values to colors
   //volume.labelmap.colortable.file = 'http://x.babymri.org/?genericanatomy.txt';
   
@@ -56,7 +57,6 @@ window.onload = function() {
   
   // start the loading/rendering
   sliceX.render();
-  
 
   //
   // THE GUI
@@ -68,8 +68,6 @@ window.onload = function() {
     //
     // add the volume to the other 3 renderers
     //
-    sliceX.add(volume);
-    sliceX.render();
     sliceY.add(volume);
     sliceY.render();
     sliceZ.add(volume);
@@ -108,7 +106,6 @@ window.onload = function() {
     var sliceZController = volumegui.add(volume, 'indexZ', 0,
         volume.dimensions[2] - 1);
     volumegui.open();
-    
   };
   
 };
