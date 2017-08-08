@@ -1,20 +1,9 @@
 window.onload = function() {
 
-  //
-  // try to create the 3D renderer
-  //
-  _webGLFriendly = true;
-  try {
-    // try to create and initialize a 3D renderer
-    threeD = new X.renderer3D();
-    threeD.container = '3d';
-    threeD.init();
-  } catch (Exception) {
-    
-    // no webgl on this machine
-    _webGLFriendly = false;
-    
-  }
+  // try to create and initialize a 3D renderer
+  threeD = new X.renderer3D();
+  threeD.container = '3d';
+  threeD.init();
   
   //
   // create the 2D renderers
@@ -48,6 +37,12 @@ window.onload = function() {
   volume.labelmap.file = 'labels.nii';
   // .. and use a color table to map the label map values to colors
   volume.labelmap.colortable.file = 'genericanatomy.txt';
+
+  // THE MESH DATA
+  mesh = new X.mesh();
+  mesh.file = 'mesh.vtk';
+  mesh.color = [0.7, 0, 0];
+  mesh.visible = false;
   
   // add the volume in the main renderer
   // we choose the sliceX here, since this should work also on
@@ -71,11 +66,6 @@ window.onload = function() {
     sliceY.render();
     sliceZ.add(volume);
     sliceZ.render();
-    
-    if (_webGLFriendly) {
-      threeD.add(volume);
-      threeD.render();
-    }
     
     // now the real GUI
     var gui = new dat.GUI();
@@ -111,6 +101,26 @@ window.onload = function() {
     var labelMapVisibleController = labelmapgui.add(volume.labelmap, 'visible');
     var labelMapOpacityController = labelmapgui.add(volume.labelmap, 'opacity', 0, 1);
     labelmapgui.open();
+
+    // GUI for the mesh
+    var meshgui = gui.addFolder('Mesh');
+    var meshVisibleController = meshgui.add(mesh, 'visible');
+    var meshOpacityController = meshgui.add(mesh, 'opacity');
+    var meshColorController = meshgui.addColor(mesh, 'color');
+    meshgui.open();
+
+        var meshWasLoaded = false;
+
+        meshVisibleController.onChange(function(value) {
+                if (!meshWasLoaded) {
+                        threeD.add(mesh);
+                }
+                meshWasLoaded = true;
+        });
+
+    threeD.add(volume);
+    threeD.render();
+
   };
 };
 
