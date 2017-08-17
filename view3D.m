@@ -38,10 +38,13 @@ if any(labels(:))
     
     % Get the coordinates
     idx = find(labels);
-    [I, J, K] = ind2sub(size(labels), idx);
+    [I, J, K] = ind2sub(size(labels), idx);    
+    I = I * units(1);
+    J = J * units(2);
+    K = K * units(3);
     
     % Subtract the center for XTK
-    center = size(volume) / 2;
+    center = size(volume) .* units' / 2;
     I = I - center(1);
     J = J - center(2);
     K = K - center(3);
