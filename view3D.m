@@ -29,6 +29,15 @@ if exist(meshPath, 'file')
     delete(meshPath);
 end
 
+% Shift the volume so that all values are positive, since XTK doesn't seem
+% to do this
+minVal = min(volume(:));
+if minVal < 0
+    warning(['The volume contains negative values. Shifting values to ' ...
+        'improve contrast...'])
+    volume = volume - minVal;
+end
+
 % Write the volume and labels to a temporary file
 imWrite3D(volumePath, volume, units);
 imWrite3D(labelPath, labels, units);
